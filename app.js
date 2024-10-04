@@ -4,7 +4,7 @@ const cors = require('cors');
 const db = require('./src/config/db');
 const responseFormatter = require('./src/middleware/responseFormatter');
 const authRoute = require('./src/modules/auth/auth.routes')
-
+const administratorRoute= require('./src/modules/administrator/administrator.routes')
 const app = express();
 
 // Middleware
@@ -19,7 +19,7 @@ db.connect();
 
 
 app.use('/api/v1',authRoute );
-
+app.use('/api/v1', administratorRoute)
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
