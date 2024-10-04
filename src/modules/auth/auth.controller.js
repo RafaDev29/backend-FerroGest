@@ -1,19 +1,17 @@
 const authService = require('./auth.service');
-const { validateAuthDTO } = require('./auth.dto');
 
 const login = async (req, res) => {
     try {
-        const validation = validateAuthDTO(req.body);
-        if (!validation.isValid) {
-            return res.status(400).json({ message: validation.error, status: false });
-        }
-
         const { username, password } = req.body;
-        const result = await authService.login(username, password);
-        
-        res.status(200).json(result);
+        const user = await authService.login(username, password);
+
+        if (user) {
+            res.success('Login successful', user);
+        } else {
+            res.error('Invalid credentials', 401);
+        }
     } catch (error) {
-        res.status(500).json({ message: 'Internal Server Error', status: false });
+        res.error(error);
     }
 };
 

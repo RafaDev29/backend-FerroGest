@@ -2,6 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const db = require('./src/config/db');
+const responseFormatter = require('./src/middleware/responseFormatter');
+const authRoute = require('./src/modules/auth/auth.routes')
 
 const app = express();
 
@@ -9,13 +11,14 @@ const app = express();
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
+app.use(responseFormatter);
 
 // Connect to Database
 db.connect();
 
-const authRoute = require('./src/modules/auth/auth.routes')
 
-app.use('/api/auth',authRoute );
+
+app.use('/api/v1',authRoute );
 
 
 app.use((err, req, res, next) => {
