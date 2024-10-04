@@ -1,0 +1,93 @@
+CREATE TABLE tb_users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('administrator', 'warehouse_clerk') NOT NULL
+);
+
+CREATE TABLE tb_administrators (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNIQUE NOT NULL,
+    hire_date DATE NOT NULL,
+    contact_phone VARCHAR(15),
+    FOREIGN KEY (user_id) REFERENCES tb_users(id)
+);
+
+CREATE TABLE tb_warehouse_clerks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNIQUE NOT NULL,
+    administrator_id INT NOT NULL,
+    hire_date DATE NOT NULL,
+    shift ENUM('morning', 'afternoon', 'night'),
+    contact_phone VARCHAR(15),
+    address VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES tb_users(id),
+    FOREIGN KEY (administrator_id) REFERENCES tb_administrators(id)
+);
+
+CREATE TABLE tb_categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(255)
+);
+
+CREATE TABLE tb_suppliers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    contact VARCHAR(100),
+    address VARCHAR(255),
+    phone VARCHAR(15),
+    email VARCHAR(100)
+);
+
+CREATE TABLE tb_products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
+    category_id INT,
+    unit_of_measure VARCHAR(50),
+    quantity_available INT DEFAULT 0,
+    reorder_point INT,
+    supplier_id INT,
+    registration_date DATE NOT NULL,
+    update_date DATE,
+    FOREIGN KEY (category_id) REFERENCES tb_categories(id),
+    FOREIGN KEY (supplier_id) REFERENCES tb_suppliers(id)
+);
+
+CREATE TABLE tb_warehouse_entries (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    entry_date DATE NOT NULL,
+    quantity INT NOT NULL,
+    supplier_id INT,
+    user_id INT,
+    reference_document VARCHAR(100),
+    FOREIGN KEY (product_id) REFERENCES tb_products(id),
+    FOREIGN KEY (supplier_id) REFERENCES tb_suppliers(id),
+    FOREIGN KEY (user_id) REFERENCES tb_users(id)
+);
+
+CREATE TABLE tb_warehouse_outputs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    output_date DATE NOT NULL,
+    quantity INT NOT NULL,
+    user_id INT,
+    destination VARCHAR(255),
+    reference_document VARCHAR(100),
+    FOREIGN KEY (product_id) REFERENCES tb_products(id),
+    FOREIGN KEY (user_id) REFERENCES tb_users(id)
+);
+
+CREATE TABLE tb_inventory_adjustments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    adjustment_date DATE NOT NULL,
+    user_id INT,
+    reason VARCHAR(255),
+    FOREIGN KEY (product_id) REFERENCES tb_products(id),
+    FOREIGN KEY (user_id) REFERENCES tb_users(id)
+);
