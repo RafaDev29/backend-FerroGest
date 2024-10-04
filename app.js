@@ -8,6 +8,7 @@ const administratorRoute= require('./src/modules/administrator/administrator.rou
 const clerksRoutes= require('./src/modules/warehouse_clerks/clerks.routes')
 const categoriesRoutes= require('./src/modules/category/category.routes')
 const suppliersRoutes= require('./src/modules/suppliers/suppliers.routes')
+const productsRoutes= require('./src/modules/product/products.routes')
 const app = express();
 
 // Middleware
@@ -26,6 +27,7 @@ app.use('/api/v1', administratorRoute)
 app.use('/api/v1', clerksRoutes)
 app.use('/api/v1', categoriesRoutes)
 app.use('/api/v1', suppliersRoutes)
+app.use('/api/v1', productsRoutes)
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
