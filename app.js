@@ -5,6 +5,8 @@ const db = require('./src/config/db');
 const responseFormatter = require('./src/middleware/responseFormatter');
 const authRoute = require('./src/modules/auth/auth.routes')
 const administratorRoute= require('./src/modules/administrator/administrator.routes')
+const clerksRoutes= require('./src/modules/warehouse_clerks/clerks.routes')
+
 const app = express();
 
 // Middleware
@@ -20,6 +22,7 @@ db.connect();
 
 app.use('/api/v1',authRoute );
 app.use('/api/v1', administratorRoute)
+app.use('/api/v1', clerksRoutes)
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
